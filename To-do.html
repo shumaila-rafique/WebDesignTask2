@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif; 
+      color: cadetblue;
+    }
+
+    .menu {
+      margin-bottom: 20px;
+      text-align: center; 
+    }
+
+    .menu button {
+      background-color: cadetblue; 
+      color: aliceblue; 
+      padding: 15px 20px; 
+      font-size: 16px; 
+      border: none; 
+      cursor: pointer; 
+      margin: 0 10px; 
+      border-radius: 75px; 
+    }
+
+    .menu button:hover {
+      background-color: #45a049; 
+    }
+
+    .page {
+      display: none;
+      position: absolute; 
+      top: 195px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      background-color: white; 
+      padding: 20px; 
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+      z-index: 1; 
+    }
+
+    .page-active {
+      display: block;
+    }
+    .form-submit-btn, .delete-btn{
+        background-color: cadetblue;
+        color: aliceblue;
+        border: none;
+    }
+    .input{
+        border-color: cadetblue;
+    }
+    h1{
+        text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-do Task Application</h1>
+  <div class="menu">
+    <button id="add-task-btn">Add Task</button>
+    <button id="deleted-task-btn">Deleted Task</button>
+    <button id="task-list-btn">Task List</button>
+  </div>
+
+  <div id="add-task" class="page">
+    <h2>Add Task</h2>
+    <form id="add-task-form">
+      <label for="task-title">Task Title:</label><br>
+      <input type="text" id="task-title" name="task-title" class="input"><br>
+      <label for="task-description">Task Description:</label><br>
+      <textarea id="task-description" name="task-description" class="input"></textarea><br>
+      <input type="submit" value="Add Task" class="form-submit-btn">
+    </form>
+  </div>
+
+  <div id="deleted-task" class="page">
+    <h2>Deleted Task</h2>
+    <ul id="deleted-task-items">
+      <li id="deleted-task-default">No Task</li>
+    </ul>
+  </div>
+
+  <div id="task-list" class="page">
+    <h2>Task List</h2>
+    <ul id="task-list-items">
+      <li id="task-list-default">No Task</li>
+    </ul>
+  </div>
+
+  <script>
+    document.getElementById('add-task-btn').addEventListener('click', function() {
+      document.getElementById('add-task').classList.add('page-active');
+      document.getElementById('deleted-task').classList.remove('page-active');
+      document.getElementById('task-list').classList.remove('page-active');
+    });
+
+    document.getElementById('deleted-task-btn').addEventListener('click', function() {
+      document.getElementById('add-task').classList.remove('page-active');
+      document.getElementById('deleted-task').classList.add('page-active');
+      document.getElementById('task-list').classList.remove('page-active');
+    });
+
+    document.getElementById('task-list-btn').addEventListener('click', function() {
+      document.getElementById('add-task').classList.remove('page-active');
+      document.getElementById('deleted-task').classList.remove('page-active');
+      document.getElementById('task-list').classList.add('page-active');
+    });
+
+    document.getElementById('add-task-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var taskTitle = document.getElementById('task-title').value;
+      var taskDescription = document.getElementById('task-description').value;
+      var taskList = document.getElementById('task-list-items');
+      var deletedTaskList = document.getElementById('deleted-task-items');
+
+      // Remove default "No Task" from Task List
+      deletedTaskList.removeChild(document.getElementById('deleted-task-default'));
+      taskList.removeChild(document.getElementById('task-list-default'));
+
+      var newTask = document.createElement('li');
+      newTask.innerHTML = '<button class="delete-btn">Delete</button> <strong>' + taskTitle + '</strong> - ' + taskDescription;
+
+      var deleteBtn = newTask.querySelector('.delete-btn'); // Select delete button within the list item
+      deleteBtn.addEventListener('click', function() {
+        taskList.removeChild(newTask);
+        deletedTaskList.appendChild(newTask);
+      });
+
+      taskList.appendChild(newTask);
+      document.getElementById('add-task-form').reset();
+      document.getElementById('add-task').classList.remove('page-active');
+    });
+  </script>
+</body>
+</html>
